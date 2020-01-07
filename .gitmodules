@@ -5,3 +5,6 @@
 [submodule "spark-swagger"]
 	path = spark-swagger
 	url = https://github.com/SamuelBoerlin/spark-swagger.git
+[submodule "c# implementation/ObjLoader"]
+	path = "c# implementation/ObjLoader"
+	url = https://github.com/chrisjansson/ObjLoader.git
