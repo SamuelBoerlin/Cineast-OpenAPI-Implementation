@@ -1,0 +1,1 @@
+java -jar swagger-codegen-cli-2.4.10.jar generate -i "../cineast-openapi-spec.json" -l csharp -o client
