@@ -1,4 +1,4 @@
-# Cineast OpenAPI Implementation
+# [Cineast](https://github.com/vitrivr/cineast/tree/multi-module-openapi-support) OpenAPI Implementation
 A simple implementation of the Cineast OpenAPI specification in C# capable of running queries.
 
 ## Setup
