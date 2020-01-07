@@ -1,0 +1,7 @@
+[submodule "cineast-openapi"]
+	path = cineast-openapi
+	url = https://github.com/SamuelBoerlin/cineast.git
+	branch = multi-module-openapi-support
+[submodule "spark-swagger"]
+	path = spark-swagger
+	url = https://github.com/SamuelBoerlin/spark-swagger.git
