@@ -564,6 +564,48 @@
           }
         }
       }
+    },
+    "/api/v1/get/thumbnails/{id}" : {
+      "get" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Download the thumbnail of object with the given id",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "produces" : "application/octet-stream",
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "file"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/get/objects/{id}" : {
+      "get" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Download the object with the given id",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "produces" : "application/octet-stream",
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "file"
+            }
+          }
+        }
+      }
     }
   },
   "definitions" : {
@@ -635,9 +677,9 @@
         "exists" : {
           "type" : "boolean"
         },
-        "mediatypeId" : {
-          "type" : "integer",
-          "format" : "int32"
+        "mediatype" : {
+          "type" : "string",
+          "enum" : [ "VIDEO", "IMAGE", "AUDIO", "MODEL3D", "IMAGE_SEQUENCE", "UNKNOWN" ]
         },
         "contentURL" : {
           "type" : "string"
@@ -737,7 +779,7 @@
           "format" : "int32"
         },
         "maxResults" : {
-		  "type" : "integer",
+        "type" : "integer",
           "format" : "int32"
         },
         "hints" : {
@@ -799,18 +841,18 @@
         }
       }
     },
-	"StringDoublePair": {
-	  "type" : "object",
-	  "properties" : {
-	    "key" : {
-		  "type" : "string"
-		},
-		"value" : {
-		  "type" : "number",
+    "StringDoublePair": {
+      "type" : "object",
+      "properties" : {
+        "key" : {
+        "type" : "string"
+      },
+      "value" : {
+        "type" : "number",
           "format" : "double"
-		}
-	  }
-	},
+        }
+      }
+    },
     "SimilarityQueryResult" : {
       "type" : "object",
       "properties" : {
