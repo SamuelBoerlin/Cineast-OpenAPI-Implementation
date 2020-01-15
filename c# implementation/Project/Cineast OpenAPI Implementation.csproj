@@ -60,9 +60,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CineastObjectDownloader.cs" />
+    <Compile Include="CompleteCineastQuery.cs" />
     <Compile Include="ObjToJsonConverter.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Complete3DSimilarityQuery.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
