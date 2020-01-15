@@ -18,7 +18,8 @@ namespace Cineast_OpenAPI_Implementation
 
         public string HostBaseUrl { get; set; }
         public string HostThumbnailsPath { get; set; } = "thumbnails/:o/:s:x";
-        public string HostObjectsPath { get; set; } = "objects/:p";
+        public string HostContentPath { get; set; } = "objects/:p";
+        public bool UseDescriptorContentPath { get; set; } = false;
 
         private Dictionary<MediaObjectDescriptor.MediatypeEnum, string> suffices = new Dictionary<MediaObjectDescriptor.MediatypeEnum, string>()
         {
@@ -45,17 +46,21 @@ namespace Cineast_OpenAPI_Implementation
             return await httpClient.GetStreamAsync(HostBaseUrl + CompletePath(HostThumbnailsPath, objectDescriptor, segmentDescriptor));
         }
 
-        public async Task<Stream> RequestObjectAsync(Apiv1Api api, MediaObjectDescriptor objectDescriptor, MediaSegmentDescriptor segmentDescriptor)
+        public async Task<Stream> RequestContentAsync(Apiv1Api api, MediaObjectDescriptor objectDescriptor, MediaSegmentDescriptor segmentDescriptor)
         {
             if (UseCineastServer)
             {
                 return await api.ApiV1GetObjectsIdGetAsync(objectDescriptor.ObjectId);
             }
+            if (UseDescriptorContentPath)
+            {
+                return await httpClient.GetStreamAsync(HostBaseUrl + objectDescriptor.ContentURL);
+            }
             if (HostBaseUrl == null)
             {
                 throw new InvalidOperationException("HostBaseUrl is null");
             }
-            return await httpClient.GetStreamAsync(HostBaseUrl + CompletePath(HostObjectsPath, objectDescriptor, segmentDescriptor));
+            return await httpClient.GetStreamAsync(HostBaseUrl + CompletePath(HostContentPath, objectDescriptor, segmentDescriptor));
         }
 
         private string CompletePath(string path, MediaObjectDescriptor objectDescriptor, MediaSegmentDescriptor segmentDescriptor)

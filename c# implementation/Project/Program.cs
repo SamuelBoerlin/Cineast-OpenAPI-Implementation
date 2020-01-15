@@ -30,7 +30,7 @@ namespace Cineast_OpenAPI_Implementation
             var downloader = new CineastObjectDownloader
             {
                 HostBaseUrl = baseFileUrl,
-                HostObjectsPath = "data/3d/:p",
+                HostContentPath = "data/3d/:p",
                 HostThumbnailsPath = "thumbnails/:o/:s:x",
                 UseCineastServer = false //Cineast's thumbnail resolver is currently broken
             };
@@ -90,7 +90,7 @@ namespace Cineast_OpenAPI_Implementation
                         {
                             Console.WriteLine("Object Data: " + mediaObjectContent);
 
-                            using (var stream = await downloader.RequestObjectAsync(api, mediaObjectContent, segmentContent))
+                            using (var stream = await downloader.RequestContentAsync(api, mediaObjectContent, segmentContent))
                             using (var reader = new StreamReader(stream))
                             {
 
