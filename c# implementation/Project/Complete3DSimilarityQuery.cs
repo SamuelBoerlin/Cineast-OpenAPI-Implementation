@@ -109,11 +109,14 @@ namespace Cineast_OpenAPI_Implementation
                 query = handler.OnStartQuery(query);
             }
 
-            var response = Api.ApiV1FindSegmentsSimilarPost(query);
+            var response = await Api.ApiV1FindSegmentsSimilarPostAsync(query);
             if (handler != null)
             {
                 response = handler.OnFinishQuery(response);
             }
+
+            var segmentQueries = new List<Task<MediaSegmentQueryResult>>();
+            var segmentQueryContext = new Dictionary<Task<MediaSegmentQueryResult>, Tuple<SimilarityQueryResult, StringDoublePair>>();
 
             foreach (var similarityResult in response.Results)
             {
@@ -125,46 +128,62 @@ namespace Cineast_OpenAPI_Implementation
                         segmentsIdList = handler.OnStartSegmentsByIdQuery(similarityResult, similarityContent, segmentsIdList);
                     }
 
-                    var segmentsResult = Api.ApiV1FindSegmentsByIdPost(segmentsIdList);
+                    var segmentQuery = Api.ApiV1FindSegmentsByIdPostAsync(segmentsIdList);
+
+                    segmentQueries.Add(segmentQuery);
+                    segmentQueryContext[segmentQuery] = Tuple.Create(similarityResult, similarityContent);
+                }
+            }
+
+            while (segmentQueries.Count > 0)
+            {
+                var task = await Task.WhenAny(segmentQueries);
+                var segmentsResult = await task;
+
+                segmentQueries.Remove(task);
+
+                var context = segmentQueryContext[task];
+                var similarityResult = context.Item1;
+                var similarityContent = context.Item2;
+
+                if (handler != null)
+                {
+                    segmentsResult = handler.OnFinishSegmentsByIdQuery(similarityResult, similarityContent, segmentsResult);
+                }
+
+                foreach (var segmentContent in segmentsResult.Content)
+                {
                     if (handler != null)
                     {
-                        segmentsResult = handler.OnFinishSegmentsByIdQuery(similarityResult, similarityContent, segmentsResult);
+                        handler.OnStartObjectByIdQuery(similarityResult, similarityContent, segmentContent);
                     }
-
-                    foreach (var segmentContent in segmentsResult.Content)
+                    var mediaObjectResult = await Api.ApiV1FindObjectByAttributeValueGetAsync("id", segmentContent.ObjectId);
+                    if (handler != null)
                     {
-                        if (handler != null)
-                        {
-                            handler.OnStartObjectByIdQuery(similarityResult, similarityContent, segmentContent);
-                        }
-                        var mediaObjectResult = Api.ApiV1FindObjectByAttributeValueGet("id", segmentContent.ObjectId);
-                        if (handler != null)
-                        {
-                            mediaObjectResult = handler.OnFinishObjectByIdQuery(similarityResult, similarityContent, segmentContent, mediaObjectResult);
-                        }
-
-                        if (callback != null)
-                        {
-                            foreach (var mediaObjectContent in mediaObjectResult.Content)
-                            {
-                                string objModel;
-
-                                using (var stream = await ObjectDownloader.RequestContentAsync(Api, mediaObjectContent, segmentContent))
-                                using (var reader = new StreamReader(stream))
-                                {
-                                    objModel = reader.ReadToEnd();
-                                }
-
-                                callback.OnFullQueryResult(similarityContent, segmentContent, mediaObjectContent, objModel);
-
-                                //Just one result expected
-                                break;
-                            }
-                        }
-
-                        //Just one result expected
-                        break;
+                        mediaObjectResult = handler.OnFinishObjectByIdQuery(similarityResult, similarityContent, segmentContent, mediaObjectResult);
                     }
+
+                    if (callback != null)
+                    {
+                        foreach (var mediaObjectContent in mediaObjectResult.Content)
+                        {
+                            string objModel;
+
+                            using (var stream = await ObjectDownloader.RequestContentAsync(Api, mediaObjectContent, segmentContent))
+                            using (var reader = new StreamReader(stream))
+                            {
+                                objModel = reader.ReadToEnd();
+                            }
+
+                            callback.OnFullQueryResult(similarityContent, segmentContent, mediaObjectContent, objModel);
+
+                            //Just one result expected
+                            break;
+                        }
+                    }
+
+                    //Just one result expected
+                    break;
                 }
             }
         }
