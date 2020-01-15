@@ -28,7 +28,7 @@ namespace Cineast_OpenAPI_Implementation
             MediaObjectQueryResult OnFinishObjectByIdQuery(SimilarityQueryResult queryResult, StringDoublePair entry, MediaSegmentDescriptor descriptor, MediaObjectQueryResult result);
         }
 
-        public class LoggingSimilarityQueryHandler : Handler, Callback
+        public class LoggingHandler : Handler, Callback
         {
             public SimilarityQuery OnStartQuery(SimilarityQuery query)
             {

@@ -6,7 +6,7 @@ namespace Cineast_OpenAPI_Implementation
 {
     class ObjToJsonConverter
     {
-        public static string Convert(FileStream stream)
+        public static string Convert(Stream stream)
         {
             var factory = new ObjLoaderFactory();
             var loader = factory.Create();

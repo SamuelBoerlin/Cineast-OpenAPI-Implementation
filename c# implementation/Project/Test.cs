@@ -41,7 +41,7 @@ namespace Cineast_OpenAPI_Implementation
                 testModelJson = ObjToJsonConverter.Convert(fs);
             }
 
-            var handler = new Complete3DSimilarityQuery.LoggingSimilarityQueryHandler();
+            var handler = new Complete3DSimilarityQuery.LoggingHandler();
 
             await query.PerformAsync(categories, testModelJson, handler, handler);
 
