@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cineast_OpenAPI_Implementation
 {
-    class Complete3DSimilarityQuery : CompleteCineastQuery
+    public class Complete3DSimilarityQuery : CompleteCineastQuery
     {
         public interface Callback
         {

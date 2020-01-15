@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Cineast_OpenAPI_Implementation
 {
-    class ObjToJsonConverter
+    public class ObjToJsonConverter
     {
         public static string Convert(Stream stream)
         {

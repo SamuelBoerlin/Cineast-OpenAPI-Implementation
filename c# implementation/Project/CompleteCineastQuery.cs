@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Cineast_OpenAPI_Implementation
 {
-    class CompleteCineastQuery
+    public class CompleteCineastQuery
     {
         public Apiv1Api Api
         {

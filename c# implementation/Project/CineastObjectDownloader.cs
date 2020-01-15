@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Cineast_OpenAPI_Implementation
 {
-    class CineastObjectDownloader
+    public class CineastObjectDownloader
     {
         private static readonly HttpClient httpClient = new HttpClient();
 
